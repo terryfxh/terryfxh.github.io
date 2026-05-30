@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  个人网站 / Personal Website
+  作者: [(Terry) Xihan Fang)]
+  说明: 这是一个单文件网站，所有内容、样式、脚本都在这一个 index.html 里。
+        想修改文字，搜索带 [方括号] 的占位符，直接替换即可。
+        每个区块前都有中文注释告诉你这里是干什么的。
+  ============================================================
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[Terry Fang] · Quantitative Researcher</title>
+  <meta name="description" content="Personal website of [Terry Fang], aspiring quantitative researcher and trader with a background in mathematics." />
+
+  <!-- 字体：IBM Plex 系列，金融/技术风格 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ====== 配色与全局变量（想换颜色改这里就行）====== */
+    :root {
+      --paper: #faf9f5;       /* 背景：米白纸感 */
+      --ink: #16140f;         /* 主文字：近黑 */
+      --ink-soft: #58544c;    /* 次要文字：灰褐 */
+      --line: #e3dfd3;        /* 分隔线 */
+      --accent: #15543a;      /* 强调色：深墨绿 */
+      --accent-soft: #e8efe9; /* 强调色浅底 */
+      --card: #ffffff;        /* 卡片背景 */
+      --max: 1080px;          /* 内容最大宽度 */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+    /* 小标签：等宽字体的区块编号/标记 */
+    .tag {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1, h2, h3 { font-family: "IBM Plex Serif", Georgia, serif; line-height: 1.2; }
+
+    /* ====== 顶部导航 ====== */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(250, 249, 245, 0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .brand { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 15px; letter-spacing: 0.02em; }
+    .brand b { color: var(--accent); }
+    .nav-links { display: flex; gap: 26px; }
+    .nav-links a { font-size: 14px; color: var(--ink-soft); transition: color .15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+    @media (max-width: 640px) { .nav-links { display: none; } }
+
+    /* ====== 英雄区（首屏）====== */
+    .hero { position: relative; padding: 96px 0 72px; overflow: hidden; }
+    .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.10; pointer-events: none; }
+    .hero .inner { position: relative; max-width: 760px; }
+    .hero h1 { font-size: clamp(40px, 6vw, 68px); font-weight: 700; letter-spacing: -0.01em; }
+    .hero .role { font-family: "IBM Plex Mono", monospace; font-size: 15px; color: var(--accent); margin-top: 18px; }
+    .hero p.lead { font-size: 19px; color: var(--ink-soft); margin-top: 22px; max-width: 620px; }
+
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 500; padding: 11px 20px;
+      border: 1px solid var(--ink); border-radius: 2px; transition: all .15s;
+    }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn.primary:hover { background: #0f3f2b; }
+    .btn.ghost:hover { background: var(--ink); color: var(--paper); }
+
+    /* ====== 通用区块 ====== */
+    section.block { padding: 72px 0; border-top: 1px solid var(--line); }
+    .block-head { margin-bottom: 40px; max-width: 640px; }
+    .block-head h2 { font-size: clamp(28px, 4vw, 38px); font-weight: 600; margin-top: 10px; }
+    .block-head p { color: var(--ink-soft); margin-top: 14px; font-size: 16px; }
+
+    /* ====== 关于 ====== */
+    .about-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 48px; }
+    @media (max-width: 760px) { .about-grid { grid-template-columns: 1fr; gap: 28px; } }
+    .about-grid p { color: var(--ink-soft); font-size: 16px; margin-bottom: 16px; }
+    .about-grid p strong { color: var(--ink); }
+    .facts { border-left: 2px solid var(--accent); padding-left: 20px; }
+    .facts .row { margin-bottom: 18px; }
+    .facts .k { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+    .facts .v { font-size: 15px; }
+
+    /* ====== 技能 ====== */
+    .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    @media (max-width: 760px) { .skills-grid { grid-template-columns: 1fr; } }
+    .skill-card { background: var(--card); border: 1px solid var(--line); border-radius: 3px; padding: 24px; }
+    .skill-card h3 { font-size: 17px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 9px; }
+    .skill-card h3 .dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      font-family: "IBM Plex Mono", monospace; font-size: 12.5px;
+      background: var(--accent-soft); color: var(--accent);
+      padding: 5px 11px; border-radius: 2px;
+    }
+
+    /* ====== 项目 ====== */
+    .projects { display: grid; gap: 20px; }
+    .project {
+      display: grid; grid-template-columns: 64px 1fr; gap: 24px;
+      background: var(--card); border: 1px solid var(--line); border-radius: 3px;
+      padding: 28px; transition: border-color .15s, transform .15s;
+    }
+    .project:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .project .num { font-family: "IBM Plex Mono", monospace; font-size: 28px; color: var(--line); font-weight: 500; }
+    .project h3 { font-size: 21px; font-weight: 600; }
+    .project .desc { color: var(--ink-soft); margin: 10px 0 16px; font-size: 15.5px; }
+    .project .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .project .links { display: flex; gap: 16px; margin-top: 14px; }
+    .project .links a { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--accent); border-bottom: 1px solid transparent; }
+    .project .links a:hover { border-color: var(--accent); }
+    @media (max-width: 560px) { .project { grid-template-columns: 1fr; gap: 8px; } .project .num { display: none; } }
+
+    /* ====== 博客 / 笔记 ====== */
+    .notes { display: grid; gap: 2px; }
+    .note {
+      display: grid; grid-template-columns: 130px 1fr auto; gap: 20px; align-items: baseline;
+      padding: 18px 0; border-bottom: 1px solid var(--line); transition: padding-left .15s;
+    }
+    .note:hover { padding-left: 8px; }
+    .note .date { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--ink-soft); }
+    .note .title { font-size: 16.5px; font-weight: 500; }
+    .note .arrow { color: var(--accent); font-family: "IBM Plex Mono", monospace; }
+    @media (max-width: 560px) { .note { grid-template-columns: 1fr; gap: 4px; } .note .arrow { display: none; } }
+
+    /* ====== 联系 ====== */
+    .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 640px) { .contact-grid { grid-template-columns: 1fr; } }
+    .contact-card {
+      border: 1px solid var(--line); border-radius: 3px; padding: 22px; background: var(--card);
+      transition: background .15s, color .15s;
+    }
+    .contact-card:hover { background: var(--accent); color: #fff; }
+    .contact-card .k { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.7; }
+    .contact-card .v { font-size: 16px; font-weight: 500; margin-top: 6px; word-break: break-all; }
+
+    /* ====== 页脚 ====== */
+    footer { border-top: 1px solid var(--line); padding: 36px 0 56px; }
+    footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    footer span { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--ink-soft); }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============ 顶部导航 ============ -->
+  <header>
+    <div class="wrap nav">
+      <!-- 把 YN 换成你名字缩写，[Terry Fang] 换成全名 -->
+      <a href="#top" class="brand"><b>//</b> [Terry Fang]</a>
+      <nav class="nav-links">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#notes">Notes</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ 英雄区 / 首屏 ============ -->
+  <section class="hero" id="top">
+    <!-- 背景的随机游走曲线（布朗运动），呼应量化主题，由下方脚本绘制 -->
+    <canvas id="walk"></canvas>
+    <div class="wrap">
+      <div class="inner">
+        <p class="tag">Mathematics · Quantitative Finance</p>
+        <!-- 你的名字 -->
+        <h1>[Terry Fang]</h1>
+        <p class="role">Aspiring Quantitative Researcher &amp; Trader</p>
+        <!-- 一句话自我介绍：你是谁、你擅长什么、你在找什么 -->
+        <p class="lead">
+          Mathematics graduate building a career at the intersection of
+          probability, statistical modeling, and financial markets. I turn
+          data into testable trading hypotheses and rigorous research.
+        </p>
+        <div class="cta-row">
+          <!-- 简历：把 resume.pdf 放到同目录下，文件名保持一致 -->
+          <a class="btn primary" href="resume.pdf" target="_blank">Download Résumé ↓</a>
+          <!-- GitHub 链接换成你的 -->
+          <a class="btn ghost" href="https://github.com/[terryfxh]" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 关于 ============ -->
+  <section class="block" id="about">
+    <div class="wrap">
+      <div class="block-head">
+        <p class="tag">01 — About</p>
+        <h2>Background &amp; focus</h2>
+      </div>
+      <div class="about-grid">
+        <div>
+          <!-- 用 2-3 段介绍你的学术背景、为什么对量化感兴趣、你的方法论 -->
+          <p>
+            I'm a mathematics major with a strong foundation in
+            <strong>probability theory, stochastic processes, linear algebra,
+            and optimization</strong>. My academic work trained me to reason
+            precisely about uncertainty — exactly the mindset quantitative
+            markets reward.
+          </p>
+          <p>
+            I'm drawn to quantitative research and trading because they reward
+            <strong>clear hypotheses, honest backtesting, and disciplined risk
+            management</strong>. I enjoy moving from a mathematical idea to
+            working code to a measurable result.
+          </p>
+          <p>
+            Outside coursework I study market microstructure, build small
+            backtesting tools, and read research on time-series and machine
+            learning for finance. I'm currently seeking
+            <strong>quant researcher / trader roles or internships</strong>.
+          </p>
+        </div>
+        <!-- 关键事实：方便招聘者快速扫读 -->
+        <div class="facts">
+          <div class="row"><div class="k">Degree</div><div class="v">[M.Sci. in Mathematics], [King's college London]</div></div>
+          <div class="row"><div class="k">Focus</div><div class="v">Probability · Statistics · Optimization</div></div>
+          <div class="row"><div class="k">Languages</div><div class="v">Python · C++ · SQL</div></div>
+          <div class="row"><div class="k">Location</div><div class="v">[London, United Kingdom]</div></div>
+          <div class="row"><div class="k">Status</div><div class="v">Open to roles &amp; internships</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 技能 ============ -->
+  <section class="block" id="skills">
+    <div class="wrap">
+      <div class="block-head">
+        <p class="tag">02 — Skills</p>
+        <h2>Technical toolkit</h2>
+        <p>Grouped by area. Replace the tags with the tools you actually use — honesty matters more than length.</p>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3><span class="dot"></span>Mathematics &amp; Statistics</h3>
+          <div class="chips">
+            <span class="chip">Probability</span>
+            <span class="chip">Stochastic Processes</span>
+            <span class="chip">Linear Algebra</span>
+            <span class="chip">Optimization</span>
+            <span class="chip">Time Series</span>
+            <span class="chip">Bayesian Inference</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <h3><span class="dot"></span>Programming</h3>
+          <div class="chips">
+            <span class="chip">Python</span>
+            <span class="chip">NumPy / Pandas</span>
+            <span class="chip">C++</span>
+            <span class="chip">SQL</span>
+            <span class="chip">Git</span>
+            <span class="chip">Linux</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <h3><span class="dot"></span>Machine Learning</h3>
+          <div class="chips">
+            <span class="chip">scikit-learn</span>
+            <span class="chip">PyTorch</span>
+            <span class="chip">Feature Engineering</span>
+            <span class="chip">Model Validation</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <h3><span class="dot"></span>Quant &amp; Finance</h3>
+          <div class="chips">
+            <span class="chip">Backtesting</span>
+            <span class="chip">Risk Management</span>
+            <span class="chip">Market Microstructure</span>
+            <span class="chip">Derivatives Pricing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 项目 / 作品集 ============ -->
+  <section class="block" id="projects">
+    <div class="wrap">
+      <div class="block-head">
+        <p class="tag">03 — Projects</p>
+        <h2>Selected work</h2>
+        <p>Each project should answer: what question did you ask, how did you test it, and what was the result? Link to the GitHub repo so people can read your code.</p>
+      </div>
+      <div class="projects">
+
+        <!-- ---- 项目卡片：复制整段即可新增一个项目 ---- -->
+        <article class="project">
+          <div class="num">01</div>
+          <div>
+            <h3>[Mean-Reversion Backtest on Equity Pairs]</h3>
+            <p class="desc">
+              [Built a vectorized backtesting engine in Python to test a
+              cointegration-based pairs-trading strategy. Quantified Sharpe,
+              max drawdown, and turnover; analyzed sensitivity to transaction
+              costs.]
+            </p>
+            <div class="meta">
+              <span class="chip">Python</span>
+              <span class="chip">Pandas</span>
+              <span class="chip">statsmodels</span>
+            </div>
+            <div class="links">
+              <a href="https://github.com/[terryfxh]/[repo]" target="_blank">→ Code</a>
+              <a href="#" target="_blank">→ Write-up</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="num">02</div>
+          <div>
+            <h3>[Monte Carlo Option Pricer]</h3>
+            <p class="desc">
+              [Implemented Monte Carlo and Black–Scholes pricing for European
+              and Asian options, with variance-reduction techniques. Compared
+              convergence and runtime in Python vs. C++.]
+            </p>
+            <div class="meta">
+              <span class="chip">C++</span>
+              <span class="chip">NumPy</span>
+              <span class="chip">Monte Carlo</span>
+            </div>
+            <div class="links">
+              <a href="https://github.com/[terryfxh]/[repo]" target="_blank">→ Code</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="num">03</div>
+          <div>
+            <h3>[Volatility Forecasting with GARCH &amp; ML]</h3>
+            <p class="desc">
+              [Compared GARCH-family models against gradient-boosted trees for
+              one-day-ahead volatility forecasting on index data; evaluated with
+              out-of-sample loss and a simple position-sizing rule.]
+            </p>
+            <div class="meta">
+              <span class="chip">Python</span>
+              <span class="chip">scikit-learn</span>
+              <span class="chip">Time Series</span>
+            </div>
+            <div class="links">
+              <a href="https://github.com/[terryfxh]/[repo]" target="_blank">→ Code</a>
+              <a href="#" target="_blank">→ Write-up</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 博客 / 研究笔记 ============ -->
+  <section class="block" id="notes">
+    <div class="wrap">
+      <div class="block-head">
+        <p class="tag">04 — Notes</p>
+        <h2>Research notes &amp; writing</h2>
+        <p>Short write-ups show how you think. Each line can link to a blog post, a PDF, or a Markdown file in your repo.</p>
+      </div>
+      <div class="notes">
+        <!-- ---- 笔记一行：复制整段即可新增一篇 ---- -->
+        <a class="note" href="#">
+          <span class="date">2026-05</span>
+          <span class="title">[Why Sharpe ratio alone can mislead you]</span>
+          <span class="arrow">→</span>
+        </a>
+        <a class="note" href="#">
+          <span class="date">2026-04</span>
+          <span class="title">[Notes on the Ornstein–Uhlenbeck process for mean reversion]</span>
+          <span class="arrow">→</span>
+        </a>
+        <a class="note" href="#">
+          <span class="date">2026-03</span>
+          <span class="title">[A from-scratch derivation of the Kelly criterion]</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 联系方式 ============ -->
+  <section class="block" id="contact">
+    <div class="wrap">
+      <div class="block-head">
+        <p class="tag">05 — Contact</p>
+        <h2>Get in touch</h2>
+        <p>The easiest way to make these useful: turn each into a real, clickable link.</p>
+      </div>
+      <div class="contact-grid">
+        <a class="contact-card" href="mailto:[xihanfang@kcl.ac.uk]">
+          <div class="k">Email</div>
+          <div class="v">[xihan.fang@kcl.ac.uk]</div>
+        </a>
+        <a class="contact-card" href="https://github.com/[terryfxh]" target="_blank">
+          <div class="k">GitHub</div>
+          <div class="v">github.com/[terryfxh]</div>
+        </a>
+        <a class="contact-card" href="https://www.linkedin.com/in/[xihanfang]" target="_blank">
+          <div class="k">LinkedIn</div>
+          <div class="v">linkedin.com/in/[xihanfang]</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 页脚 ============ -->
+  <footer>
+    <div class="wrap">
+      <span>© <span id="year"></span> [Terry]</span>
+      <span>Built from scratch · HTML · CSS · JS</span>
+    </div>
+  </footer>
+
+  <!-- ============ 脚本：年份、导航高亮、布朗运动背景 ============ -->
+  <script>
+    // 页脚年份自动更新
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // 滚动时高亮当前区块对应的导航
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const onScroll = () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 120) current = s.id;
+      });
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+      });
+    };
+    window.addEventListener('scroll', onScroll);
+
+    // 英雄区背景：模拟一条随机游走（布朗运动）价格曲线，呼应量化主题
+    const canvas = document.getElementById('walk');
+    const ctx = canvas.getContext('2d');
+    let W, H, points;
+    function reset() {
+      W = canvas.width = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+      const n = Math.max(60, Math.floor(W / 12));
+      points = [H * 0.5];
+      for (let i = 1; i < n; i++) {
+        let next = points[i - 1] + (Math.random() - 0.5) * (H * 0.06);
+        next = Math.max(H * 0.15, Math.min(H * 0.85, next));
+        points.push(next);
+      }
+    }
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.beginPath();
+      const step = W / (points.length - 1);
+      points.forEach((y, i) => {
+        const x = i * step;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = '#15543a';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+    function tick() {
+      // 缓慢让曲线向右漂移，制造轻微动态
+      points.push(Math.max(H * 0.15, Math.min(H * 0.85,
+        points[points.length - 1] + (Math.random() - 0.5) * (H * 0.06))));
+      points.shift();
+      draw();
+    }
+    reset(); draw();
+    window.addEventListener('resize', () => { reset(); draw(); });
+    setInterval(tick, 600);
+  </script>
+
+</body>
+</html>
