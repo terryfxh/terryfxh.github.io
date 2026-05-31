@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modeling a mean-reverting spread with the Ornstein–Uhlenbeck process · Terry Fang</title>
+  <meta name="description" content="The Ornstein–Uhlenbeck process from the SDE up: its solution, stationary distribution, half-life, the AR(1) correspondence used to estimate it, and what it means for pairs trading." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper:#faf9f5; --ink:#16140f; --ink-soft:#58544c; --line:#e3dfd3;
+      --accent:#15543a; --accent-soft:#e8efe9; --card:#fff;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body { font-family:"IBM Plex Sans",system-ui,sans-serif; background:var(--paper); color:var(--ink); line-height:1.7; -webkit-font-smoothing:antialiased; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .wrap { max-width:720px; margin:0 auto; padding:0 28px; }
+    header { border-bottom:1px solid var(--line); }
+    .nav { display:flex; align-items:center; justify-content:space-between; height:64px; }
+    .brand { font-family:"IBM Plex Mono",monospace; font-weight:500; font-size:15px; color:var(--ink); }
+    .brand b { color:var(--accent); }
+    .nav a.back { font-size:14px; color:var(--ink-soft); }
+    article { padding:60px 0 80px; }
+    .tag { font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); }
+    h1 { font-family:"IBM Plex Serif",Georgia,serif; font-size:clamp(28px,5vw,42px); font-weight:700; line-height:1.18; margin:14px 0 10px; letter-spacing:-0.01em; }
+    .meta { font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-soft); margin-bottom:36px; }
+    h2 { font-family:"IBM Plex Serif",Georgia,serif; font-size:23px; font-weight:600; margin:38px 0 12px; }
+    p { margin:0 0 18px; font-size:17px; color:#262219; }
+    article ul { margin:0 0 18px; padding-left:22px; }
+    article li { margin-bottom:8px; font-size:17px; color:#262219; }
+    strong { color:var(--ink); }
+    .lead { font-size:19px; color:var(--ink-soft); }
+    .callout { background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:3px; padding:18px 22px; margin:24px 0; }
+    .callout .k { font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+    code { font-family:"IBM Plex Mono",monospace; font-size:0.92em; background:var(--accent-soft); color:var(--accent); padding:1px 6px; border-radius:2px; }
+    .formula { font-family:"IBM Plex Mono",monospace; background:var(--card); border:1px solid var(--line); border-radius:3px; padding:14px 18px; margin:8px 0 20px; font-size:15px; line-height:1.9; overflow-x:auto; }
+    .formula .step { color:var(--ink-soft); }
+    footer { border-top:1px solid var(--line); padding:30px 0; }
+    footer .wrap { display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+    footer span, footer a { font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-soft); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a href="../index.html" class="brand"><b>//</b> Terry Fang</a>
+      <a href="../index.html#notes" class="back">← Notes</a>
+    </div>
+  </header>
+
+  <article>
+    <div class="wrap">
+      <p class="tag">Research note</p>
+      <h1>Modeling a mean-reverting spread with the Ornstein–Uhlenbeck process</h1>
+      <p class="meta">April 2026 · ~7 min read</p>
+
+      <p class="lead">
+        Pairs trading rests on one assumption: that the spread between two
+        related assets wanders away from a fair level but is pulled back. The
+        Ornstein–Uhlenbeck (OU) process is the simplest continuous-time model of
+        exactly that pull. This note builds it from the stochastic differential
+        equation up — its solution, stationary distribution, and half-life — then
+        shows how it becomes an AR(1) regression you can actually estimate.
+      </p>
+
+      <h2>The equation</h2>
+      <p>
+        The OU process for a spread $X_t$ is the mean-reverting diffusion
+      </p>
+      <div class="formula">
+        dX_t = θ (μ − X_t) dt + σ dW_t,   θ &gt; 0
+      </div>
+      <p>
+        Read it as a force plus a kick. The drift $\theta(\mu - X_t)$ always
+        points <em>back toward</em> the long-run level $\mu$ — above $\mu$ it is
+        negative, below it is positive — with strength set by the
+        <strong>mean-reversion speed</strong> $\theta$. The term $\sigma\,dW_t$ is
+        the random shock that keeps knocking $X_t$ off $\mu$. The whole model is
+        the tug-of-war between the two.
+      </p>
+
+      <h2>Solving it</h2>
+      <p>
+        This linear SDE has a closed-form solution. Multiply by the integrating
+        factor $e^{\theta t}$ so the left side becomes an exact differential:
+      </p>
+      <div class="formula">
+        d(e^{θt} X_t) = e^{θt}(θμ dt + σ dW_t)
+        <br><span class="step">integrate from 0 to t, then multiply by e^(−θt):</span>
+        <br><b>X_t = μ + (X_0 − μ) e^(−θt) + σ ∫₀ᵗ e^(−θ(t−s)) dW_s</b>
+      </div>
+      <p>From this the first two moments follow directly:</p>
+      <div class="formula">
+        E[X_t]   = μ + (X_0 − μ) e^(−θt)        <span class="step">→ μ   as t → ∞</span>
+        <br>Var[X_t] = (σ² / 2θ) (1 − e^(−2θt))   <span class="step">→ σ²/2θ as t → ∞</span>
+      </div>
+      <p>
+        The mean decays geometrically toward $\mu$ and the variance saturates.
+        Because the noise integral is Gaussian, $X_t$ is normal at every horizon,
+        and as $t\to\infty$ it forgets its start and settles into a
+        <strong>stationary distribution</strong>
+      </p>
+      <div class="formula">
+        X_∞ ~ Normal( μ , σ² / 2θ )
+      </div>
+      <p>
+        That stationarity is the whole point: a stationary spread mean-reverts,
+        so deviations are temporary and therefore potentially tradable. (Testing
+        for it is what the Engle–Granger / ADF step in the
+        <a href="https://github.com/terryfxh/quant-statarb-pairs">pairs project</a>
+        does before any OU fitting.)
+      </p>
+
+      <h2>The half-life — the number that matters</h2>
+      <p>
+        How long does a deviation take to decay? Set the expected gap to half its
+        initial size, $e^{-\theta t} = \tfrac12$:
+      </p>
+      <div class="formula">
+        t½ = ln 2 / θ
+      </div>
+      <p>
+        The <strong>half-life</strong> turns the abstract $\theta$ into a tradable
+        timescale: roughly how many days until half a mispricing is expected to
+        close. A short half-life (days) means frequent, exploitable round-trips;
+        a long one means the signal is real but too sluggish to trade. This single
+        number is what told me a pair was hopeless in practice — see the end.
+      </p>
+
+      <h2>From SDE to a regression you can estimate</h2>
+      <p>
+        Sample the exact solution on a fixed grid (say daily, $\Delta t = 1$).
+        Conditioning on $X_t$, the next observation is
+      </p>
+      <div class="formula">
+        X_{t+1} = μ(1 − φ) + φ X_t + ε_t,   φ = e^(−θ),   ε_t ~ N(0, σ²(1−φ²)/2θ)
+      </div>
+      <p>
+        That is exactly an <strong>AR(1) process</strong>. So fitting OU is just
+        ordinary least squares of $X_{t+1}$ on $X_t$ — regress, read off the
+        intercept $c$ and slope $\phi$, and invert the map:
+      </p>
+      <div class="formula">
+        θ = −ln φ        <span class="step">(mean-reversion speed)</span>
+        <br>μ = c / (1 − φ)   <span class="step">(equilibrium level)</span>
+        <br>t½ = ln 2 / θ     <span class="step">(half-life)</span>
+        <br>σ_eq = √( Var(ε) / (1 − φ²) )   <span class="step">(stationary std-dev)</span>
+      </div>
+      <p>
+        The standardized spread $z_t = (X_t - \mu)/\sigma_{\text{eq}}$ is then the
+        signal a pairs strategy trades: enter when $|z|$ is large, exit as it
+        reverts toward zero. A whole continuous-time model collapses into a
+        one-line regression — which is exactly why OU is the workhorse for
+        mean-reversion.
+      </p>
+
+      <div class="callout">
+        <div class="k">Where this bit me — honestly</div>
+        <p style="margin:0;">
+          On the real EWA/EWC pair, the fitted half-life was about
+          <strong>83 days</strong>. Mathematically the spread mean-reverts; in
+          trading terms it barely moves, producing only a handful of trades and
+          no out-of-sample edge. The OU fit didn't just price the signal — it
+          <em>diagnosed why the strategy fails</em>. Knowing the half-life up
+          front would have set realistic expectations before any backtest.
+        </p>
+      </div>
+
+      <p>
+        That is the appeal of a model with this few parameters: every one of them
+        means something. $\theta$ is a speed, $\mu$ a fair value, $\sigma$ a
+        shock size, and their combination is a half-life you can sanity-check
+        against how a real spread behaves.
+      </p>
+    </div>
+  </article>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="year"></span> Terry Fang</span>
+      <a href="../index.html">← Back to home</a>
+    </div>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

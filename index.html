@@ -12,7 +12,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Terry Fang · Quantitative Researcher</title>
-  <meta name="description" content="Personal website of [Terry Fang], aspiring quantitative researcher and trader with a background in mathematics." />
+  <meta name="description" content="Personal website of Terry Fang, aspiring quantitative researcher and trader with a background in mathematics." />
 
   <!-- 字体：IBM Plex 系列，金融/技术风格 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -245,7 +245,7 @@
         </div>
         <!-- 关键事实：方便招聘者快速扫读 -->
         <div class="facts">
-          <div class="row"><div class="k">Degree</div><div class="v">M.Sci. in Mathematics, King's college London</div></div>
+          <div class="row"><div class="k">Degree</div><div class="v">M.Sci. in Mathematics, King's College London</div></div>
           <div class="row"><div class="k">Focus</div><div class="v">Probability · Statistics · Optimization</div></div>
           <div class="row"><div class="k">Languages</div><div class="v">Python · C++ · SQL</div></div>
           <div class="row"><div class="k">Location</div><div class="v">London, United Kingdom</div></div>
@@ -322,21 +322,27 @@
         <article class="project">
           <div class="num">01</div>
           <div>
-            <h3>[Mean-Reversion Backtest on Equity Pairs]</h3>
+            <h3>Cointegration &amp; Mean-Reversion — an Out-of-Sample Reality Check</h3>
             <p class="desc">
-              [Built a vectorized backtesting engine in Python to test a
-              cointegration-based pairs-trading strategy. Quantified Sharpe,
-              max drawdown, and turnover; analyzed sensitivity to transaction
-              costs.]
+              Tested whether a textbook cointegration + Ornstein–Uhlenbeck pairs
+              strategy survives out-of-sample on real ETF data (EWA/EWC).
+              Estimated the hedge ratio via Engle–Granger (ADF) and froze the OU
+              parameters in-sample. Verdict: it does not — out-of-sample Sharpe
+              −0.11 and negative across every entry threshold. Diagnosed the
+              cause (an 83-day half-life → only 3 trades, marginal cointegration,
+              regime change). A disciplined test that catches overfitting before
+              risking capital.
             </p>
             <div class="meta">
               <span class="chip">Python</span>
-              <span class="chip">Pandas</span>
               <span class="chip">statsmodels</span>
+              <span class="chip">Cointegration</span>
+              <span class="chip">OU Process</span>
+              <span class="chip">Backtesting</span>
             </div>
             <div class="links">
-              <a href="https://github.com/terryfxh/[repo]" target="_blank">→ Code</a>
-              <a href="#" target="_blank">→ Write-up</a>
+              <a href="https://github.com/terryfxh/quant-statarb-pairs" target="_blank">→ Code</a>
+              <a href="https://github.com/terryfxh/quant-statarb-pairs#readme" target="_blank">→ Write-up</a>
             </div>
           </div>
         </article>
@@ -344,19 +350,25 @@
         <article class="project">
           <div class="num">02</div>
           <div>
-            <h3>[Monte Carlo Option Pricer]</h3>
+            <h3>Monte Carlo Option Pricer — Variance Reduction</h3>
             <p class="desc">
-              [Implemented Monte Carlo and Black–Scholes pricing for European
-              and Asian options, with variance-reduction techniques. Compared
-              convergence and runtime in Python vs. C++.]
+              Priced European and arithmetic-Asian options by risk-neutral Monte
+              Carlo, validated against closed-form Black–Scholes (within ~1.5
+              standard errors). Implemented antithetic and control-variate
+              estimators (6.8× variance reduction on the European call; ~36× on
+              the Asian via a geometric-average control), and verified the
+              1/√N convergence rate over 40 runs.
             </p>
             <div class="meta">
-              <span class="chip">C++</span>
-              <span class="chip">NumPy</span>
+              <span class="chip">Python</span>
+              <span class="chip">NumPy / SciPy</span>
               <span class="chip">Monte Carlo</span>
+              <span class="chip">Variance Reduction</span>
+              <span class="chip">Black–Scholes</span>
             </div>
             <div class="links">
-              <a href="https://github.com/terryfxh/[repo]" target="_blank">→ Code</a>
+              <a href="https://github.com/terryfxh/quant-option-pricer" target="_blank">→ Code</a>
+              <a href="https://github.com/terryfxh/quant-option-pricer#readme" target="_blank">→ Write-up</a>
             </div>
           </div>
         </article>
@@ -364,20 +376,26 @@
         <article class="project">
           <div class="num">03</div>
           <div>
-            <h3>[Volatility Forecasting with GARCH &amp; ML]</h3>
+            <h3>Volatility Forecasting — GARCH vs. Machine Learning</h3>
             <p class="desc">
-              [Compared GARCH-family models against gradient-boosted trees for
-              one-day-ahead volatility forecasting on index data; evaluated with
-              out-of-sample loss and a simple position-sizing rule.]
+              Implemented GARCH(1,1) from scratch by maximum likelihood and
+              benchmarked it against an EWMA baseline and gradient-boosted trees
+              for one-day-ahead volatility, scored out-of-sample with
+              proxy-consistent losses (MSE, QLIKE). On a known GARCH process the
+              MLE recovers the true parameters and the parametric model clearly
+              beats ML — a deliberately contrarian result, plus the lesson that a
+              noisy r² proxy can barely separate models that differ hugely
+              against the truth.
             </p>
             <div class="meta">
               <span class="chip">Python</span>
+              <span class="chip">GARCH / MLE</span>
               <span class="chip">scikit-learn</span>
               <span class="chip">Time Series</span>
             </div>
             <div class="links">
-              <a href="https://github.com/terryfxh/[repo]" target="_blank">→ Code</a>
-              <a href="#" target="_blank">→ Write-up</a>
+              <a href="https://github.com/terryfxh/quant-vol-forecasting" target="_blank">→ Code</a>
+              <a href="https://github.com/terryfxh/quant-vol-forecasting#readme" target="_blank">→ Write-up</a>
             </div>
           </div>
         </article>
@@ -396,19 +414,19 @@
       </div>
       <div class="notes">
         <!-- ---- 笔记一行：复制整段即可新增一篇 ---- -->
-        <a class="note" href="#">
+        <a class="note" href="notes/why-sharpe-can-mislead.html">
           <span class="date">2026-05</span>
-          <span class="title">[Why Sharpe ratio alone can mislead you]</span>
+          <span class="title">Why the Sharpe ratio alone can mislead you</span>
           <span class="arrow">→</span>
         </a>
-        <a class="note" href="#">
+        <a class="note" href="notes/ornstein-uhlenbeck-mean-reversion.html">
           <span class="date">2026-04</span>
-          <span class="title">[Notes on the Ornstein–Uhlenbeck process for mean reversion]</span>
+          <span class="title">Modeling a mean-reverting spread with the Ornstein–Uhlenbeck process</span>
           <span class="arrow">→</span>
         </a>
-        <a class="note" href="#">
+        <a class="note" href="notes/deriving-the-kelly-criterion.html">
           <span class="date">2026-03</span>
-          <span class="title">[A from-scratch derivation of the Kelly criterion]</span>
+          <span class="title">A from-scratch derivation of the Kelly criterion</span>
           <span class="arrow">→</span>
         </a>
       </div>
@@ -424,7 +442,7 @@
         <p>The easiest way to make these useful: turn each into a real, clickable link.</p>
       </div>
       <div class="contact-grid">
-        <a class="contact-card" href="mailto:xihanfang@kcl.ac.uk">
+        <a class="contact-card" href="mailto:xihan.fang@kcl.ac.uk">
           <div class="k">Email</div>
           <div class="v">xihan.fang@kcl.ac.uk</div>
         </a>
@@ -443,7 +461,7 @@
   <!-- ============ 页脚 ============ -->
   <footer>
     <div class="wrap">
-      <span>© <span id="year"></span> Terry</span>
+      <span>© <span id="year"></span> Terry Fang</span>
       <span>Built from scratch · HTML · CSS · JS</span>
     </div>
   </footer>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A from-scratch derivation of the Kelly criterion · Terry Fang</title>
+  <meta name="description" content="Deriving the Kelly criterion from first principles — discrete bets and continuous investing — why it maximizes long-run growth, and why practitioners bet less." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper:#faf9f5; --ink:#16140f; --ink-soft:#58544c; --line:#e3dfd3;
+      --accent:#15543a; --accent-soft:#e8efe9; --card:#fff;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body { font-family:"IBM Plex Sans",system-ui,sans-serif; background:var(--paper); color:var(--ink); line-height:1.7; -webkit-font-smoothing:antialiased; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .wrap { max-width:720px; margin:0 auto; padding:0 28px; }
+    header { border-bottom:1px solid var(--line); }
+    .nav { display:flex; align-items:center; justify-content:space-between; height:64px; }
+    .brand { font-family:"IBM Plex Mono",monospace; font-weight:500; font-size:15px; color:var(--ink); }
+    .brand b { color:var(--accent); }
+    .nav a.back { font-size:14px; color:var(--ink-soft); }
+    article { padding:60px 0 80px; }
+    .tag { font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); }
+    h1 { font-family:"IBM Plex Serif",Georgia,serif; font-size:clamp(30px,5vw,44px); font-weight:700; line-height:1.18; margin:14px 0 10px; letter-spacing:-0.01em; }
+    .meta { font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-soft); margin-bottom:36px; }
+    h2 { font-family:"IBM Plex Serif",Georgia,serif; font-size:23px; font-weight:600; margin:38px 0 12px; }
+    p { margin:0 0 18px; font-size:17px; color:#262219; }
+    article ul { margin:0 0 18px; padding-left:22px; }
+    article li { margin-bottom:8px; font-size:17px; color:#262219; }
+    strong { color:var(--ink); }
+    .lead { font-size:19px; color:var(--ink-soft); }
+    .callout { background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:3px; padding:18px 22px; margin:24px 0; }
+    .callout .k { font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+    code { font-family:"IBM Plex Mono",monospace; font-size:0.92em; background:var(--accent-soft); color:var(--accent); padding:1px 6px; border-radius:2px; }
+    .formula { font-family:"IBM Plex Mono",monospace; background:var(--card); border:1px solid var(--line); border-radius:3px; padding:14px 18px; margin:8px 0 20px; font-size:15px; line-height:1.9; overflow-x:auto; }
+    .formula .step { color:var(--ink-soft); }
+    footer { border-top:1px solid var(--line); padding:30px 0; }
+    footer .wrap { display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+    footer span, footer a { font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-soft); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a href="../index.html" class="brand"><b>//</b> Terry Fang</a>
+      <a href="../index.html#notes" class="back">← Notes</a>
+    </div>
+  </header>
+
+  <article>
+    <div class="wrap">
+      <p class="tag">Research note</p>
+      <h1>A from-scratch derivation of the Kelly criterion</h1>
+      <p class="meta">March 2026 · ~7 min read</p>
+
+      <p class="lead">
+        How much of your capital should you put on a favourable bet? Betting too
+        little leaves growth on the table; betting too much courts ruin. The
+        Kelly criterion answers this precisely by maximizing the long-run growth
+        rate of wealth. Here it is, derived from first principles — first for a
+        simple bet, then for continuous investing.
+      </p>
+
+      <h2>Why maximize <em>expected log wealth</em>?</h2>
+      <p>
+        The key idea is that wealth <strong>compounds multiplicatively</strong>.
+        Over many bets, terminal wealth is a product of per-bet multipliers,
+        $W_n = W_0\prod_{i=1}^n M_i$, so
+      </p>
+      <div class="formula">
+        ln(W_n / W_0) = Σ ln(M_i)
+        <br><span class="step">⇒ (1/n) ln(W_n/W_0) → E[ln M]   (law of large numbers)</span>
+      </div>
+      <p>
+        The long-run exponential growth rate is therefore the <strong>expected
+        log of the multiplier</strong>, $g = \mathbb{E}[\ln M]$. Maximizing $g$
+        maximizes the rate at which wealth compounds — this is the growth-optimal
+        objective, and it is what "Kelly" means. (It is also why we use logs: not
+        an arbitrary utility choice, but the natural object when returns
+        multiply.)
+      </p>
+
+      <h2>The discrete case: a single favourable bet</h2>
+      <p>
+        Bet a fraction $f$ of wealth on an outcome that pays net odds $b$-to-1
+        with probability $p$, and loses the stake with probability $q = 1-p$.
+        The wealth multiplier is $1+bf$ on a win and $1-f$ on a loss, so the
+        growth rate is
+      </p>
+      <div class="formula">
+        g(f) = p · ln(1 + b f) + q · ln(1 − f)
+      </div>
+      <p>Differentiate, set to zero, and solve:</p>
+      <div class="formula">
+        g'(f) = pb/(1 + bf) − q/(1 − f) = 0
+        <br><span class="step">⇒ pb(1 − f) = q(1 + bf)</span>
+        <br><span class="step">⇒ pb − q = bf(p + q) = bf</span>
+        <br><b>⇒ f* = (pb − q) / b = p − q/b</b>
+      </div>
+      <p>
+        (The second derivative is negative, so this is a maximum.) The formula is
+        intuitive: <strong>bet your edge divided by the odds</strong>. For an
+        even-money bet ($b=1$), $f^\* = p - q = 2p - 1$ — so a 55% edge says stake
+        10% of your bankroll. If the bet is not favourable ($pb \le q$), $f^\*\le0$:
+        don't bet.
+      </p>
+
+      <h2>The continuous case: investing in a risky asset</h2>
+      <p>
+        Now allocate a fraction $f$ of wealth to a risky asset with expected
+        return $\mu$ and volatility $\sigma$, the rest at the risk-free rate $r$.
+        Model the asset as geometric Brownian motion; wealth then follows
+      </p>
+      <div class="formula">
+        dW/W = [r + f(μ − r)] dt + f σ dB_t
+      </div>
+      <p>
+        By Itô's lemma the log of wealth picks up the $-\tfrac12 (f\sigma)^2$
+        variance-drag term, giving an expected growth rate
+      </p>
+      <div class="formula">
+        g(f) = r + f(μ − r) − ½ f² σ²
+      </div>
+      <p>This is concave in $f$; maximizing it is immediate:</p>
+      <div class="formula">
+        g'(f) = (μ − r) − f σ² = 0
+        <br><b>⇒ f* = (μ − r) / σ²</b>
+      </div>
+      <p>
+        The optimal leverage is the <strong>excess return divided by
+        variance</strong> — the continuous analogue of "edge over odds." Substituting
+        back gives the maximum achievable growth rate a clean form:
+      </p>
+      <div class="formula">
+        g(f*) = r + ½ (μ − r)² / σ² = r + ½ · SR²
+      </div>
+      <p>
+        where $\mathrm{SR} = (\mu-r)/\sigma$ is the Sharpe ratio. So the best
+        growth Kelly can extract scales with the <em>square</em> of the Sharpe
+        ratio — a neat bridge to
+        <a href="why-sharpe-can-mislead.html">the Sharpe note</a>: a higher
+        Sharpe is worth more than linearly, but only if that Sharpe is real.
+      </p>
+
+      <h2>Why it's optimal — and why almost nobody bets full Kelly</h2>
+      <p>
+        Because $\tfrac1n\ln(W_n/W_0)\to g(f)$ almost surely, the Kelly bettor's
+        wealth <strong>almost surely overtakes</strong> that of anyone following
+        a materially different fixed strategy, for large enough $n$. That is a
+        strong optimality result. Yet practitioners routinely bet a
+        <em>fraction</em> of Kelly. Three good reasons:
+      </p>
+      <ul>
+        <li><strong>Full Kelly is brutally volatile.</strong> The growth rate is flat near its peak, but variance keeps rising with $f$. Betting half-Kelly keeps about three-quarters of the growth while roughly halving volatility — a trade most people take gladly.</li>
+        <li><strong>You don't know the true parameters.</strong> The formula needs $p,b$ (or $\mu,\sigma$) exactly. Plugging in noisy estimates makes you systematically <em>over-bet</em>, and over-betting past the growth-optimal point destroys growth fast. Parameter uncertainty alone argues for shrinking $f$.</li>
+        <li><strong>Drawdowns and ruin.</strong> Kelly maximizes growth, not survival of a drawdown constraint. Anyone with a finite tolerance for losing (or a risk mandate) should bet less.</li>
+      </ul>
+
+      <div class="callout">
+        <div class="k">The one-line takeaway</div>
+        <p style="margin:0;">
+          Kelly says stake <code>f* = (μ−r)/σ²</code> — your edge per unit of
+          risk — to compound fastest. In practice, bet a fraction of that,
+          because the edge is estimated, not known.
+        </p>
+      </div>
+
+      <p>
+        This is also exactly the discipline behind position sizing in a real
+        strategy: size by edge and variance, then haircut for the fact that both
+        were measured with error — the same humility that made my
+        <a href="https://github.com/terryfxh/quant-statarb-pairs">pairs-trading
+        backtest</a> insist on out-of-sample testing before believing any number.
+      </p>
+    </div>
+  </article>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="year"></span> Terry Fang</span>
+      <a href="../index.html">← Back to home</a>
+    </div>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

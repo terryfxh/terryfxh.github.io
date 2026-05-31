@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why the Sharpe ratio alone can mislead you · Terry Fang</title>
+  <meta name="description" content="A short note on how the Sharpe ratio misleads — in-sample vs out-of-sample, estimation noise, autocorrelation, and tail risk — with a worked example." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper:#faf9f5; --ink:#16140f; --ink-soft:#58544c; --line:#e3dfd3;
+      --accent:#15543a; --accent-soft:#e8efe9; --card:#fff;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body { font-family:"IBM Plex Sans",system-ui,sans-serif; background:var(--paper); color:var(--ink); line-height:1.7; -webkit-font-smoothing:antialiased; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .wrap { max-width:720px; margin:0 auto; padding:0 28px; }
+    header { border-bottom:1px solid var(--line); }
+    .nav { display:flex; align-items:center; justify-content:space-between; height:64px; }
+    .brand { font-family:"IBM Plex Mono",monospace; font-weight:500; font-size:15px; color:var(--ink); }
+    .brand b { color:var(--accent); }
+    .nav a.back { font-size:14px; color:var(--ink-soft); }
+    article { padding:60px 0 80px; }
+    .tag { font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); }
+    h1 { font-family:"IBM Plex Serif",Georgia,serif; font-size:clamp(30px,5vw,44px); font-weight:700; line-height:1.18; margin:14px 0 10px; letter-spacing:-0.01em; }
+    .meta { font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-soft); margin-bottom:36px; }
+    h2 { font-family:"IBM Plex Serif",Georgia,serif; font-size:23px; font-weight:600; margin:38px 0 12px; }
+    p { margin:0 0 18px; font-size:17px; color:#262219; }
+    article ul { margin:0 0 18px; padding-left:22px; }
+    article li { margin-bottom:8px; font-size:17px; color:#262219; }
+    strong { color:var(--ink); }
+    .lead { font-size:19px; color:var(--ink-soft); }
+    .callout { background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:3px; padding:18px 22px; margin:24px 0; }
+    .callout .k { font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+    code { font-family:"IBM Plex Mono",monospace; font-size:0.92em; background:var(--accent-soft); color:var(--accent); padding:1px 6px; border-radius:2px; }
+    .formula { font-family:"IBM Plex Mono",monospace; background:var(--card); border:1px solid var(--line); border-radius:3px; padding:14px 18px; margin:8px 0 20px; font-size:15px; overflow-x:auto; }
+    footer { border-top:1px solid var(--line); padding:30px 0; }
+    footer .wrap { display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+    footer span, footer a { font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-soft); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a href="../index.html" class="brand"><b>//</b> Terry Fang</a>
+      <a href="../index.html#notes" class="back">← Notes</a>
+    </div>
+  </header>
+
+  <article>
+    <div class="wrap">
+      <p class="tag">Research note</p>
+      <h1>Why the Sharpe ratio alone can mislead you</h1>
+      <p class="meta">May 2026 · ~6 min read</p>
+
+      <p class="lead">
+        The Sharpe ratio is the first number anyone quotes about a strategy, and
+        often the only one. It is genuinely useful — but on its own it hides at
+        least four ways a strategy can look good and be worthless. Here is a tour,
+        ending with a worked example from my own backtest.
+      </p>
+
+      <p>
+        Recall the definition: the (annualized) Sharpe ratio is the mean excess
+        return divided by its volatility,
+      </p>
+      <div class="formula">SR = (E[r] − r_f) / σ(r) × √(periods per year)</div>
+      <p>
+        It answers "how much return per unit of risk?" with risk defined as
+        return volatility. Every word in that sentence is a place where it can
+        deceive you.
+      </p>
+
+      <h2>1. In-sample vs. out-of-sample</h2>
+      <p>
+        A Sharpe ratio is only meaningful if you know <em>which</em> data produced
+        it. Computed on the same data you used to choose the strategy, it measures
+        how well you fit the past, not how you will do in the future. The honest
+        version is always out-of-sample: estimate parameters on one window,
+        measure performance on a later, untouched window. The gap between the two
+        is often enormous — and it is the out-of-sample number that is real.
+      </p>
+
+      <h2>2. A Sharpe ratio is an estimate, with a standard error</h2>
+      <p>
+        Quoting "Sharpe 1.5" without a confidence interval is like quoting a poll
+        with no margin of error. For roughly i.i.d. returns the standard error of
+        the estimate is approximately
+      </p>
+      <div class="formula">SE(SR) ≈ √((1 + ½·SR²) / N)</div>
+      <p>
+        where <code>N</code> is the number of observations. The deeper issue is
+        the number of <strong>independent bets</strong>, not calendar days. A
+        strategy that holds a position for months and trades a handful of times
+        has very few independent bets, so its Sharpe estimate is dominated by
+        noise — even if you computed it from thousands of daily returns. Short
+        samples and slow strategies manufacture false confidence.
+      </p>
+
+      <h2>3. Annualizing assumes away autocorrelation</h2>
+      <p>
+        The √(periods) scaling assumes returns are serially independent. They
+        rarely are. Positively autocorrelated returns — common with illiquid
+        positions, smoothed marks, or anything mark-to-model — make realized
+        volatility look smaller than the true risk, inflating the annualized
+        Sharpe. Some of the most impressive-looking Sharpe ratios are simply
+        artifacts of stale prices.
+      </p>
+
+      <h2>4. Volatility is not the same as risk</h2>
+      <p>
+        The Sharpe ratio penalizes upside and downside deviation equally and is
+        blind to the <em>shape</em> of the return distribution. It says nothing
+        about skew, fat tails, or the path of losses. The classic trap is
+        selling tail risk — picking up pennies that produces a smooth, high-Sharpe
+        equity curve right up until the rare, ruinous loss. Two strategies with
+        identical Sharpe can have completely different maximum drawdowns. Sharpe
+        cannot tell them apart.
+      </p>
+
+      <h2>A worked example from my own backtest</h2>
+      <p>
+        In a <a href="https://github.com/terryfxh/quant-statarb-pairs">pairs-trading
+        study</a> I ran on the EWA/EWC ETF pair, the <strong>in-sample</strong>
+        Sharpe was a respectable <strong>0.64</strong>. Taken alone, that looks
+        like a strategy worth trading.
+      </p>
+      <div class="callout">
+        <div class="k">The same strategy, out-of-sample</div>
+        <p style="margin:0;">
+          Sharpe <strong>−0.11</strong>, a −12.4% drawdown, and only
+          <strong>3 trades</strong> over six years — negative at every entry
+          threshold I tested. The mean-reversion half-life was 83 days, so the
+          strategy almost never traded, and the in-sample Sharpe was built on a
+          relationship that did not survive.
+        </p>
+      </div>
+      <p>
+        Every failure above is on display: the in-sample/out-of-sample gap (0.64
+        → −0.11), too few independent bets (3 trades) to estimate anything
+        reliably, and a number that flattered a fragile, slow signal. Had I
+        quoted only the in-sample Sharpe, I would have drawn exactly the wrong
+        conclusion.
+      </p>
+
+      <h2>What to look at instead</h2>
+      <p>So the Sharpe ratio is a starting point, never a verdict. Alongside it I want to see:</p>
+      <ul>
+        <li><strong>Out-of-sample</strong> performance, always — and ideally across several regimes.</li>
+        <li>The <strong>standard error of the Sharpe</strong> (or a deflated Sharpe that adjusts for how many strategies were tried), and the number of independent bets behind it.</li>
+        <li><strong>Maximum drawdown</strong> and the distribution of losses — skew and kurtosis, not just volatility. Sortino helps by penalizing only downside.</li>
+        <li><strong>Turnover, capacity, and cost sensitivity</strong> — a high paper Sharpe that evaporates after costs is not a strategy.</li>
+      </ul>
+      <p>
+        None of this makes the Sharpe ratio useless. It makes it one number among
+        several — and teaches the habit that matters most in quant research:
+        before trusting a result, ask what it is quietly assuming.
+      </p>
+    </div>
+  </article>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="year"></span> Terry Fang</span>
+      <a href="../index.html">← Back to home</a>
+    </div>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
