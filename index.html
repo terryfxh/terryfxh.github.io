@@ -124,6 +124,23 @@
       padding: 5px 11px; border-radius: 2px;
     }
 
+    /* ====== AI 辅助开发面板 ====== */
+    .ai-panel {
+      margin-top: 20px; background: var(--card); border: 1px solid var(--line);
+      border-radius: 3px; padding: 26px;
+      display: grid; grid-template-columns: 1.3fr 1fr; gap: 34px; align-items: center;
+    }
+    @media (max-width: 760px) { .ai-panel { grid-template-columns: 1fr; gap: 24px; } }
+    .ai-panel h3 { font-size: 17px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 9px; }
+    .ai-panel h3 .dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
+    .ai-panel p.sub { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 16px; }
+    .tok .big { font-family: "IBM Plex Mono", monospace; font-size: 34px; font-weight: 500; color: var(--accent); line-height: 1; }
+    .tok .unit { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--ink-soft); }
+    .tok .cap { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
+    .bars { display: flex; align-items: flex-end; gap: 9px; height: 96px; margin: 18px 0 24px; }
+    .bars .bar { flex: 1; background: var(--accent-soft); border-top: 3px solid var(--accent); border-radius: 2px 2px 0 0; position: relative; }
+    .bars .bar .lab { position: absolute; bottom: -19px; left: 0; right: 0; text-align: center; font-family: "IBM Plex Mono", monospace; font-size: 10px; color: var(--ink-soft); }
+
     /* ====== 项目 ====== */
     .projects { display: grid; gap: 20px; }
     .project {
@@ -182,6 +199,7 @@
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
+        <a href="#publications">Publications</a>
         <a href="#notes">Notes</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -199,9 +217,9 @@
         <p class="role">Aspiring Quantitative Researcher &amp; Trader</p>
         <!-- 一句话自我介绍：你是谁、你擅长什么、你在找什么 -->
         <p class="lead">
-          Mathematics graduate building a career at the intersection of
-          probability, statistical modeling, and financial markets. I turn
-          data into testable trading hypotheses and rigorous research.
+          Mathematics graduate working at the intersection of probability,
+          stochastic modeling, and financial markets. I turn real data into
+          mathematical models, testable trading hypotheses, and rigorous research.
         </p>
         <div class="cta-row">
           <!-- 简历：把 resume.pdf 放到同目录下，文件名保持一致 -->
@@ -224,32 +242,37 @@
         <div>
           <!-- 用 2-3 段介绍你的学术背景、为什么对量化感兴趣、你的方法论 -->
           <p>
-            I'm a mathematics major with a strong foundation in
-            <strong>probability theory, stochastic processes, linear algebra,
-            and optimization</strong>. My academic work trained me to reason
-            precisely about uncertainty — exactly the mindset quantitative
-            markets reward.
+            I'm a mathematics major whose strengths run through advanced pure and
+            applied maths — <strong>network science, algorithmic science,
+            algebraic topology, differential equations, probability and stochastic
+            processes</strong>. What I rely on most is a strong
+            <strong>mathematical intuition and imagination</strong>: seeing the
+            structure of a problem, and the shape of its solution, before grinding
+            through the details.
           </p>
           <p>
-            I'm drawn to quantitative research and trading because they reward
-            <strong>clear hypotheses, honest backtesting, and disciplined risk
-            management</strong>. I enjoy moving from a mathematical idea to
-            working code to a measurable result.
+            My core skill is <strong>turning real data into mathematical
+            models</strong> — choosing the right structure, calibrating it, and
+            validating it honestly. My peer-reviewed work on stochastic
+            branching-process modeling and the projects below are both built that
+            way.
           </p>
           <p>
-            Outside coursework I study market microstructure, build small
-            backtesting tools, and read research on time-series and machine
-            learning for finance. I'm currently seeking
-            <strong>quant researcher / trader roles or internships</strong>.
+            I work in an <strong>AI-augmented way</strong>: I own the mathematics,
+            the modeling, and the research design, and use frontier coding agents —
+            Claude and Codex — daily to implement and stress-test ideas at high
+            throughput, while the judgment about what to build and whether a result
+            holds up stays mine. I'm currently seeking
+            <strong>quantitative research or trading roles and internships</strong>.
           </p>
         </div>
         <!-- 关键事实：方便招聘者快速扫读 -->
         <div class="facts">
           <div class="row"><div class="k">Degree</div><div class="v">M.Sci. in Mathematics, King's College London</div></div>
-          <div class="row"><div class="k">Focus</div><div class="v">Probability · Statistics · Optimization</div></div>
-          <div class="row"><div class="k">Languages</div><div class="v">Python · C++ · SQL</div></div>
+          <div class="row"><div class="k">Focus</div><div class="v">Network Science · Algebraic Topology · Stochastic Modeling</div></div>
+          <div class="row"><div class="k">Languages</div><div class="v">Python · Java · MATLAB · Lean 4</div></div>
           <div class="row"><div class="k">Location</div><div class="v">London, United Kingdom</div></div>
-          <div class="row"><div class="k">Status</div><div class="v">Open to roles &amp; internships</div></div>
+          <div class="row"><div class="k">Status</div><div class="v">Open to quant research / trading roles</div></div>
         </div>
       </div>
     </div>
@@ -261,18 +284,37 @@
       <div class="block-head">
         <p class="tag">02 — Skills</p>
         <h2>Technical toolkit</h2>
-        <p>Grouped by area. Replace the tags with the tools you actually use — honesty matters more than length.</p>
+        <p>Grouped by area — the mathematics, tooling, and methods I work with day to day.</p>
       </div>
       <div class="skills-grid">
         <div class="skill-card">
-          <h3><span class="dot"></span>Mathematics &amp; Statistics</h3>
+          <h3><span class="dot"></span>Pure Mathematics</h3>
           <div class="chips">
-            <span class="chip">Probability</span>
-            <span class="chip">Stochastic Processes</span>
+            <span class="chip">Algebraic Topology</span>
+            <span class="chip">Network Science</span>
+            <span class="chip">Measure Theory</span>
+            <span class="chip">Real Analysis</span>
             <span class="chip">Linear Algebra</span>
-            <span class="chip">Optimization</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <h3><span class="dot"></span>Probability &amp; Stochastics</h3>
+          <div class="chips">
+            <span class="chip">Probability Theory</span>
+            <span class="chip">Stochastic Processes</span>
+            <span class="chip">Stochastic Calculus</span>
+            <span class="chip">Statistics</span>
             <span class="chip">Time Series</span>
-            <span class="chip">Bayesian Inference</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <h3><span class="dot"></span>Applied Math &amp; Optimization</h3>
+          <div class="chips">
+            <span class="chip">Differential Equations</span>
+            <span class="chip">Numerical Analysis</span>
+            <span class="chip">Game Theory</span>
+            <span class="chip">Optimization</span>
+            <span class="chip">Algorithmic Science</span>
           </div>
         </div>
         <div class="skill-card">
@@ -280,19 +322,20 @@
           <div class="chips">
             <span class="chip">Python</span>
             <span class="chip">NumPy / Pandas</span>
-            <span class="chip">C++</span>
-            <span class="chip">SQL</span>
+            <span class="chip">Java</span>
+            <span class="chip">MATLAB</span>
+            <span class="chip">Lean 4</span>
             <span class="chip">Git</span>
-            <span class="chip">Linux</span>
           </div>
         </div>
         <div class="skill-card">
-          <h3><span class="dot"></span>Machine Learning</h3>
+          <h3><span class="dot"></span>Modeling &amp; ML</h3>
           <div class="chips">
+            <span class="chip">Mathematical Modeling</span>
             <span class="chip">scikit-learn</span>
-            <span class="chip">PyTorch</span>
-            <span class="chip">Feature Engineering</span>
-            <span class="chip">Model Validation</span>
+            <span class="chip">Gradient Boosting</span>
+            <span class="chip">Model Calibration</span>
+            <span class="chip">Validation</span>
           </div>
         </div>
         <div class="skill-card">
@@ -305,6 +348,40 @@
           </div>
         </div>
       </div>
+
+      <!-- AI 辅助开发面板:左侧说明 + 右侧 token 用量可视化 -->
+      <div class="ai-panel">
+        <div>
+          <h3><span class="dot"></span>AI-Assisted Development</h3>
+          <p class="sub">
+            I own the mathematics, the modeling, and the research design;
+            frontier coding agents (Claude, Claude Code, Codex) let me turn ideas
+            into tested implementations quickly. The judgment about what to build
+            and whether a result is real stays human — the tools accelerate it,
+            they don't replace it.
+          </p>
+          <div class="chips">
+            <span class="chip">Claude</span>
+            <span class="chip">Claude Code</span>
+            <span class="chip">Codex</span>
+            <span class="chip">Prompt Engineering</span>
+            <span class="chip">Agentic Workflows</span>
+          </div>
+        </div>
+        <div class="tok">
+          <div><span class="big">~2.5M</span> <span class="unit">tokens / day</span></div>
+          <div class="cap">in AI coding tools · representative last-7-days usage</div>
+          <div class="bars">
+            <div class="bar" style="height:80%"><span class="lab">Mon</span></div>
+            <div class="bar" style="height:60%"><span class="lab">Tue</span></div>
+            <div class="bar" style="height:100%"><span class="lab">Wed</span></div>
+            <div class="bar" style="height:73%"><span class="lab">Thu</span></div>
+            <div class="bar" style="height:93%"><span class="lab">Fri</span></div>
+            <div class="bar" style="height:53%"><span class="lab">Sat</span></div>
+            <div class="bar" style="height:87%"><span class="lab">Sun</span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -314,7 +391,7 @@
       <div class="block-head">
         <p class="tag">03 — Projects</p>
         <h2>Selected work</h2>
-        <p>Each project should answer: what question did you ask, how did you test it, and what was the result? Link to the GitHub repo so people can read your code.</p>
+        <p>Each project starts from a clear question, tests it honestly out-of-sample, and reports what actually happened — full code linked.</p>
       </div>
       <div class="projects">
 
@@ -404,13 +481,50 @@
     </div>
   </section>
 
+  <!-- ============ 论文 / Publications ============ -->
+  <section class="block" id="publications">
+    <div class="wrap">
+      <div class="block-head">
+        <p class="tag">04 — Publications</p>
+        <h2>Peer-reviewed research</h2>
+      </div>
+      <article class="project" style="grid-template-columns:1fr;">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+            <span class="chip">Peer-reviewed</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink-soft);">Current Cancer Reports · 2025 · vol. 7, pp. 293–314</span>
+          </div>
+          <h3>Mathematical Modeling of the in Vitro Effects of Pinus Massoniana Bark Extract on Human Hepatoma Cell Line BEL-7402</h3>
+          <p class="desc" style="margin-bottom:10px;">
+            Y.-Y. Cui, <strong>X.-H. Fang</strong>, X.-Q. Fu (2025). A continuous-time
+            <strong>branching–Hill</strong> stochastic model — combining branching-process
+            kinetics, a Poisson-process formulation, logistic growth, and sigmoidal (Hill)
+            pharmacodynamics — calibrated to assay data and validated against experimental
+            inhibition rates. Grounded in applied probability and nonlinear dynamics.
+          </p>
+          <div class="meta">
+            <span class="chip">Applied Probability</span>
+            <span class="chip">Branching Processes</span>
+            <span class="chip">Poisson Process</span>
+            <span class="chip">Stochastic Modeling</span>
+            <span class="chip">Model Calibration</span>
+          </div>
+          <div class="links">
+            <a href="https://doi.org/10.25082/CCR.2025.01.006" target="_blank">→ Paper (DOI)</a>
+            <a href="https://www.researchgate.net/profile/Xi-Han-Fang" target="_blank">→ ResearchGate</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
   <!-- ============ 博客 / 研究笔记 ============ -->
   <section class="block" id="notes">
     <div class="wrap">
       <div class="block-head">
-        <p class="tag">04 — Notes</p>
+        <p class="tag">05 — Notes</p>
         <h2>Research notes &amp; writing</h2>
-        <p>Short write-ups show how you think. Each line can link to a blog post, a PDF, or a Markdown file in your repo.</p>
+        <p>Short write-ups on the ideas behind the work — and how I think about a problem.</p>
       </div>
       <div class="notes">
         <!-- ---- 笔记一行：复制整段即可新增一篇 ---- -->
@@ -437,9 +551,9 @@
   <section class="block" id="contact">
     <div class="wrap">
       <div class="block-head">
-        <p class="tag">05 — Contact</p>
+        <p class="tag">06 — Contact</p>
         <h2>Get in touch</h2>
-        <p>The easiest way to make these useful: turn each into a real, clickable link.</p>
+        <p>Happy to talk about quantitative research, mathematical modeling, or any of the work here.</p>
       </div>
       <div class="contact-grid">
         <a class="contact-card" href="mailto:xihan.fang@kcl.ac.uk">
