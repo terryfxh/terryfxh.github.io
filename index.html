@@ -42,6 +42,7 @@
       color: var(--ink);
       line-height: 1.65;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -80,9 +81,9 @@
     /* ====== 英雄区（首屏）====== */
     .hero { position: relative; padding: 96px 0 72px; overflow: hidden; }
     .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.10; pointer-events: none; }
-    .hero .inner { position: relative; max-width: 760px; }
+    .hero .inner { position: relative; max-width: 760px; min-width: 0; }
     .hero h1 { font-size: clamp(40px, 6vw, 68px); font-weight: 700; letter-spacing: -0.01em; }
-    .hero .role { font-family: "IBM Plex Mono", monospace; font-size: 15px; color: var(--accent); margin-top: 18px; }
+    .hero .role { font-family: "IBM Plex Mono", monospace; font-size: 15px; color: var(--accent); margin-top: 18px; overflow-wrap: anywhere; }
     .hero p.lead { font-size: 19px; color: var(--ink-soft); margin-top: 22px; max-width: 620px; }
 
     .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
@@ -124,22 +125,13 @@
       padding: 5px 11px; border-radius: 2px;
     }
 
-    /* ====== AI 辅助开发面板 ====== */
-    .ai-panel {
-      margin-top: 20px; background: var(--card); border: 1px solid var(--line);
-      border-radius: 3px; padding: 26px;
-      display: grid; grid-template-columns: 1.3fr 1fr; gap: 34px; align-items: center;
+    .workflow-note {
+      margin-top: 22px;
+      color: var(--ink-soft);
+      font-size: 14.5px;
+      max-width: 820px;
     }
-    @media (max-width: 760px) { .ai-panel { grid-template-columns: 1fr; gap: 24px; } }
-    .ai-panel h3 { font-size: 17px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 9px; }
-    .ai-panel h3 .dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
-    .ai-panel p.sub { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 16px; }
-    .tok .big { font-family: "IBM Plex Mono", monospace; font-size: 34px; font-weight: 500; color: var(--accent); line-height: 1; }
-    .tok .unit { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--ink-soft); }
-    .tok .cap { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
-    .bars { display: flex; align-items: flex-end; gap: 9px; height: 96px; margin: 18px 0 24px; }
-    .bars .bar { flex: 1; background: var(--accent-soft); border-top: 3px solid var(--accent); border-radius: 2px 2px 0 0; position: relative; }
-    .bars .bar .lab { position: absolute; bottom: -19px; left: 0; right: 0; text-align: center; font-family: "IBM Plex Mono", monospace; font-size: 10px; color: var(--ink-soft); }
+    .workflow-note strong { color: var(--ink); }
 
     /* ====== 项目 ====== */
     .projects { display: grid; gap: 20px; }
@@ -153,10 +145,36 @@
     .project h3 { font-size: 21px; font-weight: 600; }
     .project .desc { color: var(--ink-soft); margin: 10px 0 16px; font-size: 15.5px; }
     .project .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .project-evidence {
+      display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 22px; align-items: center;
+      margin: 22px 0 18px; padding-top: 20px; border-top: 1px solid var(--line);
+    }
+    .project-figure img {
+      display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 3px;
+    }
+    .project-figure figcaption {
+      margin-top: 7px; font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-soft);
+    }
+    .metrics { display: grid; gap: 12px; }
+    .metric { padding-left: 13px; border-left: 2px solid var(--accent); }
+    .metric .k {
+      font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--ink-soft);
+    }
+    .metric .v { font-family: "IBM Plex Mono", monospace; font-size: 19px; color: var(--ink); margin-top: 2px; }
+    .metric .n { font-size: 13px; color: var(--ink-soft); margin-top: 2px; }
     .project .links { display: flex; gap: 16px; margin-top: 14px; }
     .project .links a { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--accent); border-bottom: 1px solid transparent; }
     .project .links a:hover { border-color: var(--accent); }
-    @media (max-width: 560px) { .project { grid-template-columns: 1fr; gap: 8px; } .project .num { display: none; } }
+    @media (max-width: 860px) { .project-evidence { grid-template-columns: 1fr; } }
+    @media (max-width: 560px) {
+      .wrap { width: 100%; max-width: 390px; margin-left: 0; margin-right: 0; padding: 0 24px; }
+      .hero { padding: 80px 0 64px; }
+      .hero h1 { font-size: 40px; }
+      .hero p.lead { font-size: 18px; }
+      .project { grid-template-columns: 1fr; gap: 8px; padding: 22px; }
+      .project .num { display: none; }
+    }
 
     /* ====== 博客 / 笔记 ====== */
     .notes { display: grid; gap: 2px; }
@@ -222,10 +240,9 @@
           mathematical models, testable trading hypotheses, and rigorous research.
         </p>
         <div class="cta-row">
-          <!-- 简历：把 resume.pdf 放到同目录下，文件名保持一致 -->
-          <a class="btn primary" href="resume.pdf" target="_blank">Download Résumé ↓</a>
+          <a class="btn primary" href="resume.pdf" target="_blank" rel="noopener noreferrer">Download Résumé ↓</a>
           <!-- GitHub 链接换成你的 -->
-          <a class="btn ghost" href="https://github.com/terryfxh" target="_blank">GitHub</a>
+          <a class="btn ghost" href="https://github.com/terryfxh" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
       </div>
     </div>
@@ -242,38 +259,35 @@
         <div>
           <!-- 用 2-3 段介绍你的学术背景、为什么对量化感兴趣、你的方法论 -->
           <p>
-            My expertise is in advanced pure and applied mathematics:
-            <strong>network science, algorithmic science, algebraic topology,
-            differential equations, and probability and stochastic
-            processes</strong>. What I rely on most is strong
-            <strong>mathematical intuition and imagination</strong>; I tend to see
-            the structure of a problem, and the shape of its solution, before
-            working through the details.
+            I am a mathematics graduate from King's College London focused on
+            <strong>probability, stochastic processes, time series, numerical
+            methods, optimization, and mathematical modeling</strong>. My work is
+            built around turning assumptions into estimable models, then testing
+            whether the result survives out of sample.
           </p>
           <p>
-            My central strength is <strong>turning real data into mathematical
-            models</strong>: choosing the right structure, calibrating it, and
-            testing how well it holds up out of sample. My peer-reviewed research
-            on stochastic branching-process modeling and the projects below are
-            both built this way.
+            The portfolio below is deliberately evidence-led: a cointegration
+            strategy that fails honestly out of sample, a Monte Carlo pricer
+            validated against closed forms, and a volatility study where a
+            hand-written GARCH MLE is compared with machine learning under
+            proxy-aware losses. Each project reports the setup, the result, and
+            the limitation.
           </p>
           <p>
-            I also work in an <strong>AI-augmented way</strong>. I own the
-            mathematics, the modeling, and the research design, and use frontier
-            coding agents such as Claude and Codex daily to implement and
-            stress-test ideas at high throughput, while the judgment about what to
-            build, and whether a result holds up, remains my own. I am currently
-            seeking <strong>quantitative research or trading roles and
-            internships</strong>.
+            I am currently seeking <strong>quantitative research, trading, and
+            research-engineering internships or graduate roles</strong>, with a
+            preference for teams that value rigorous modeling, reproducible
+            research, and clear communication of uncertainty.
           </p>
         </div>
         <!-- 关键事实：方便招聘者快速扫读 -->
         <div class="facts">
           <div class="row"><div class="k">Degree</div><div class="v">M.Sci. in Mathematics, King's College London</div></div>
-          <div class="row"><div class="k">Focus</div><div class="v">Network Science · Algebraic Topology · Stochastic Modeling</div></div>
+          <div class="row"><div class="k">Focus</div><div class="v">Stochastic Modeling · Time Series · Numerical Methods</div></div>
+          <div class="row"><div class="k">Evidence</div><div class="v">3 quant projects · 1 peer-reviewed paper · 3 research notes</div></div>
           <div class="row"><div class="k">Languages</div><div class="v">Python · Java · MATLAB · Lean 4</div></div>
           <div class="row"><div class="k">Location</div><div class="v">London, United Kingdom</div></div>
-          <div class="row"><div class="k">Status</div><div class="v">Open to quant research / trading roles</div></div>
+          <div class="row"><div class="k">Target</div><div class="v">Quant research · Trading · Research engineering</div></div>
         </div>
       </div>
     </div>
@@ -344,45 +358,20 @@
           <div class="chips">
             <span class="chip">Backtesting</span>
             <span class="chip">Risk Management</span>
-            <span class="chip">Market Microstructure</span>
+            <span class="chip">Volatility Modeling</span>
+            <span class="chip">Statistical Arbitrage</span>
             <span class="chip">Derivatives Pricing</span>
+            <span class="chip">Transaction Costs</span>
           </div>
         </div>
       </div>
 
-      <!-- AI 辅助开发面板:左侧说明 + 右侧 token 用量可视化 -->
-      <div class="ai-panel">
-        <div>
-          <h3><span class="dot"></span>AI-Assisted Development</h3>
-          <p class="sub">
-            I own the mathematics, the modeling, and the research design, and
-            frontier coding agents (Claude, Claude Code, Codex) let me turn ideas
-            into tested implementations quickly. The judgment about what to build,
-            and whether a result is real, remains human: the tools accelerate that
-            judgment rather than replace it.
-          </p>
-          <div class="chips">
-            <span class="chip">Claude</span>
-            <span class="chip">Claude Code</span>
-            <span class="chip">Codex</span>
-            <span class="chip">Prompt Engineering</span>
-            <span class="chip">Agentic Workflows</span>
-          </div>
-        </div>
-        <div class="tok">
-          <div><span class="big">~2.5M</span> <span class="unit">tokens / day</span></div>
-          <div class="cap">in AI coding tools · representative last-7-days usage</div>
-          <div class="bars">
-            <div class="bar" style="height:80%"><span class="lab">Mon</span></div>
-            <div class="bar" style="height:60%"><span class="lab">Tue</span></div>
-            <div class="bar" style="height:100%"><span class="lab">Wed</span></div>
-            <div class="bar" style="height:73%"><span class="lab">Thu</span></div>
-            <div class="bar" style="height:93%"><span class="lab">Fri</span></div>
-            <div class="bar" style="height:53%"><span class="lab">Sat</span></div>
-            <div class="bar" style="height:87%"><span class="lab">Sun</span></div>
-          </div>
-        </div>
-      </div>
+      <p class="workflow-note">
+        <strong>Workflow:</strong> I use coding tools to accelerate implementation
+        and review, while keeping the research question, mathematical assumptions,
+        model choice, and interpretation of results explicit and independently
+        checked.
+      </p>
     </div>
   </section>
 
@@ -412,6 +401,29 @@
               disciplined test of the kind that catches overfitting before any
               capital is at risk.
             </p>
+            <div class="project-evidence">
+              <figure class="project-figure">
+                <img src="quant-statarb-pairs/results/03_equity.png" alt="Out-of-sample equity curve and drawdown for the EWA/EWC pairs strategy" loading="lazy" />
+                <figcaption>Out-of-sample equity curve and drawdown.</figcaption>
+              </figure>
+              <div class="metrics" aria-label="Pairs trading key results">
+                <div class="metric">
+                  <div class="k">OOS Sharpe</div>
+                  <div class="v">-0.11</div>
+                  <div class="n">negative across every tested entry threshold</div>
+                </div>
+                <div class="metric">
+                  <div class="k">OU half-life</div>
+                  <div class="v">82.7 days</div>
+                  <div class="n">too slow for a practical pairs signal</div>
+                </div>
+                <div class="metric">
+                  <div class="k">OOS trades</div>
+                  <div class="v">3</div>
+                  <div class="n">low statistical power; result treated cautiously</div>
+                </div>
+              </div>
+            </div>
             <div class="meta">
               <span class="chip">Python</span>
               <span class="chip">statsmodels</span>
@@ -420,8 +432,8 @@
               <span class="chip">Backtesting</span>
             </div>
             <div class="links">
-              <a href="https://github.com/terryfxh/quant-statarb-pairs" target="_blank">→ Code</a>
-              <a href="https://github.com/terryfxh/quant-statarb-pairs#readme" target="_blank">→ Write-up</a>
+              <a href="https://github.com/terryfxh/quant-statarb-pairs" target="_blank" rel="noopener noreferrer">→ Code</a>
+              <a href="https://github.com/terryfxh/quant-statarb-pairs#readme" target="_blank" rel="noopener noreferrer">→ Write-up</a>
             </div>
           </div>
         </article>
@@ -439,6 +451,29 @@
               geometric-average control, and verified the 1/√N convergence rate
               over 40 runs.
             </p>
+            <div class="project-evidence">
+              <figure class="project-figure">
+                <img src="quant-option-pricer/results/01_convergence.png" alt="Monte Carlo option-pricing RMSE convergence under plain, antithetic, and control-variate estimators" loading="lazy" />
+                <figcaption>RMSE convergence against closed-form Black-Scholes.</figcaption>
+              </figure>
+              <div class="metrics" aria-label="Option pricer key results">
+                <div class="metric">
+                  <div class="k">European call</div>
+                  <div class="v">10.436</div>
+                  <div class="n">control-variate MC vs. Black-Scholes 10.451</div>
+                </div>
+                <div class="metric">
+                  <div class="k">Variance reduction</div>
+                  <div class="v">6.8x</div>
+                  <div class="n">European control variate vs. plain MC</div>
+                </div>
+                <div class="metric">
+                  <div class="k">Asian option</div>
+                  <div class="v">36.1x</div>
+                  <div class="n">standard-error reduction using geometric control</div>
+                </div>
+              </div>
+            </div>
             <div class="meta">
               <span class="chip">Python</span>
               <span class="chip">NumPy / SciPy</span>
@@ -447,8 +482,8 @@
               <span class="chip">Black–Scholes</span>
             </div>
             <div class="links">
-              <a href="https://github.com/terryfxh/quant-option-pricer" target="_blank">→ Code</a>
-              <a href="https://github.com/terryfxh/quant-option-pricer#readme" target="_blank">→ Write-up</a>
+              <a href="https://github.com/terryfxh/quant-option-pricer" target="_blank" rel="noopener noreferrer">→ Code</a>
+              <a href="https://github.com/terryfxh/quant-option-pricer#readme" target="_blank" rel="noopener noreferrer">→ Write-up</a>
             </div>
           </div>
         </article>
@@ -467,6 +502,29 @@
               result, with the further lesson that a noisy r² proxy can barely
               separate models that differ substantially against the truth.
             </p>
+            <div class="project-evidence">
+              <figure class="project-figure">
+                <img src="quant-vol-forecasting/results/02_scores.png" alt="Out-of-sample QLIKE scores for GARCH, EWMA, and gradient-boosted trees" loading="lazy" />
+                <figcaption>Out-of-sample QLIKE, scored against true latent variance.</figcaption>
+              </figure>
+              <div class="metrics" aria-label="Volatility forecasting key results">
+                <div class="metric">
+                  <div class="k">GARCH QLIKE</div>
+                  <div class="v">0.0005</div>
+                  <div class="n">vs. true latent variance in controlled simulation</div>
+                </div>
+                <div class="metric">
+                  <div class="k">MLE recovery</div>
+                  <div class="v">0.973</div>
+                  <div class="n">estimated persistence vs. true 0.980</div>
+                </div>
+                <div class="metric">
+                  <div class="k">Proxy lesson</div>
+                  <div class="v">1.330 / 1.337 / 1.368</div>
+                  <div class="n">proxy QLIKE makes the models look much closer</div>
+                </div>
+              </div>
+            </div>
             <div class="meta">
               <span class="chip">Python</span>
               <span class="chip">GARCH / MLE</span>
@@ -474,8 +532,8 @@
               <span class="chip">Time Series</span>
             </div>
             <div class="links">
-              <a href="https://github.com/terryfxh/quant-vol-forecasting" target="_blank">→ Code</a>
-              <a href="https://github.com/terryfxh/quant-vol-forecasting#readme" target="_blank">→ Write-up</a>
+              <a href="https://github.com/terryfxh/quant-vol-forecasting" target="_blank" rel="noopener noreferrer">→ Code</a>
+              <a href="https://github.com/terryfxh/quant-vol-forecasting#readme" target="_blank" rel="noopener noreferrer">→ Write-up</a>
             </div>
           </div>
         </article>
@@ -513,8 +571,8 @@
             <span class="chip">Model Calibration</span>
           </div>
           <div class="links">
-            <a href="https://doi.org/10.25082/CCR.2025.01.006" target="_blank">→ Paper (DOI)</a>
-            <a href="https://www.researchgate.net/profile/Xi-Han-Fang" target="_blank">→ ResearchGate</a>
+            <a href="https://doi.org/10.25082/CCR.2025.01.006" target="_blank" rel="noopener noreferrer">→ Paper (DOI)</a>
+            <a href="https://www.researchgate.net/profile/Xi-Han-Fang" target="_blank" rel="noopener noreferrer">→ ResearchGate</a>
           </div>
         </div>
       </article>
@@ -563,11 +621,11 @@
           <div class="k">Email</div>
           <div class="v">xihan.fang@kcl.ac.uk</div>
         </a>
-        <a class="contact-card" href="https://github.com/terryfxh" target="_blank">
+        <a class="contact-card" href="https://github.com/terryfxh" target="_blank" rel="noopener noreferrer">
           <div class="k">GitHub</div>
           <div class="v">github.com/terryfxh</div>
         </a>
-        <a class="contact-card" href="https://www.linkedin.com/in/xihan-fang" target="_blank">
+        <a class="contact-card" href="https://www.linkedin.com/in/xihan-fang" target="_blank" rel="noopener noreferrer">
           <div class="k">LinkedIn</div>
           <div class="v">linkedin.com/in/xihan-fang</div>
         </a>
