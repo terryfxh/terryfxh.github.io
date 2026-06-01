@@ -194,7 +194,7 @@
   <header>
     <div class="wrap nav">
       <!-- 把 YN 换成你名字缩写，Terry Fang 换成全名 -->
-      <a href="#top" class="brand"><b>//</b> Terry Fang</a>
+      <a href="#top" class="brand">Terry Fang</a>
       <nav class="nav-links">
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
@@ -235,35 +235,36 @@
   <section class="block" id="about">
     <div class="wrap">
       <div class="block-head">
-        <p class="tag">01 — About</p>
+        <p class="tag">01 · About</p>
         <h2>Background &amp; focus</h2>
       </div>
       <div class="about-grid">
         <div>
           <!-- 用 2-3 段介绍你的学术背景、为什么对量化感兴趣、你的方法论 -->
           <p>
-            I'm a mathematics major whose strengths run through advanced pure and
-            applied maths — <strong>network science, algorithmic science,
-            algebraic topology, differential equations, probability and stochastic
-            processes</strong>. What I rely on most is a strong
-            <strong>mathematical intuition and imagination</strong>: seeing the
-            structure of a problem, and the shape of its solution, before grinding
-            through the details.
+            My expertise is in advanced pure and applied mathematics:
+            <strong>network science, algorithmic science, algebraic topology,
+            differential equations, and probability and stochastic
+            processes</strong>. What I rely on most is strong
+            <strong>mathematical intuition and imagination</strong>; I tend to see
+            the structure of a problem, and the shape of its solution, before
+            working through the details.
           </p>
           <p>
-            My core skill is <strong>turning real data into mathematical
-            models</strong> — choosing the right structure, calibrating it, and
-            validating it honestly. My peer-reviewed work on stochastic
-            branching-process modeling and the projects below are both built that
-            way.
+            My central strength is <strong>turning real data into mathematical
+            models</strong>: choosing the right structure, calibrating it, and
+            testing how well it holds up out of sample. My peer-reviewed research
+            on stochastic branching-process modeling and the projects below are
+            both built this way.
           </p>
           <p>
-            I work in an <strong>AI-augmented way</strong>: I own the mathematics,
-            the modeling, and the research design, and use frontier coding agents —
-            Claude and Codex — daily to implement and stress-test ideas at high
-            throughput, while the judgment about what to build and whether a result
-            holds up stays mine. I'm currently seeking
-            <strong>quantitative research or trading roles and internships</strong>.
+            I also work in an <strong>AI-augmented way</strong>. I own the
+            mathematics, the modeling, and the research design, and use frontier
+            coding agents such as Claude and Codex daily to implement and
+            stress-test ideas at high throughput, while the judgment about what to
+            build, and whether a result holds up, remains my own. I am currently
+            seeking <strong>quantitative research or trading roles and
+            internships</strong>.
           </p>
         </div>
         <!-- 关键事实：方便招聘者快速扫读 -->
@@ -282,9 +283,9 @@
   <section class="block" id="skills">
     <div class="wrap">
       <div class="block-head">
-        <p class="tag">02 — Skills</p>
-        <h2>Technical toolkit</h2>
-        <p>Grouped by area — the mathematics, tooling, and methods I work with day to day.</p>
+        <p class="tag">02 · Skills</p>
+        <h2>Technical skills</h2>
+        <p>Grouped by area: the mathematics, tooling, and methods I work with day to day.</p>
       </div>
       <div class="skills-grid">
         <div class="skill-card">
@@ -354,11 +355,11 @@
         <div>
           <h3><span class="dot"></span>AI-Assisted Development</h3>
           <p class="sub">
-            I own the mathematics, the modeling, and the research design;
+            I own the mathematics, the modeling, and the research design, and
             frontier coding agents (Claude, Claude Code, Codex) let me turn ideas
-            into tested implementations quickly. The judgment about what to build
-            and whether a result is real stays human — the tools accelerate it,
-            they don't replace it.
+            into tested implementations quickly. The judgment about what to build,
+            and whether a result is real, remains human: the tools accelerate that
+            judgment rather than replace it.
           </p>
           <div class="chips">
             <span class="chip">Claude</span>
@@ -389,9 +390,9 @@
   <section class="block" id="projects">
     <div class="wrap">
       <div class="block-head">
-        <p class="tag">03 — Projects</p>
+        <p class="tag">03 · Projects</p>
         <h2>Selected work</h2>
-        <p>Each project starts from a clear question, tests it honestly out-of-sample, and reports what actually happened — full code linked.</p>
+        <p>Each project begins with a clear question, tests it out of sample, and reports what actually happened.</p>
       </div>
       <div class="projects">
 
@@ -399,16 +400,17 @@
         <article class="project">
           <div class="num">01</div>
           <div>
-            <h3>Cointegration &amp; Mean-Reversion — an Out-of-Sample Reality Check</h3>
+            <h3>Cointegration &amp; Mean-Reversion: An Out-of-Sample Reality Check</h3>
             <p class="desc">
-              Tested whether a textbook cointegration + Ornstein–Uhlenbeck pairs
-              strategy survives out-of-sample on real ETF data (EWA/EWC).
-              Estimated the hedge ratio via Engle–Granger (ADF) and froze the OU
-              parameters in-sample. Verdict: it does not — out-of-sample Sharpe
-              −0.11 and negative across every entry threshold. Diagnosed the
-              cause (an 83-day half-life → only 3 trades, marginal cointegration,
-              regime change). A disciplined test that catches overfitting before
-              risking capital.
+              Tested whether a textbook cointegration and Ornstein–Uhlenbeck pairs
+              strategy could survive out of sample on real ETF data (EWA/EWC). I
+              estimated the hedge ratio with Engle–Granger (ADF) and fixed the OU
+              parameters in sample. It did not survive: the out-of-sample Sharpe
+              was −0.11 and remained negative at every entry threshold tested. The
+              cause was an 83-day half-life that permitted only three trades,
+              together with marginal cointegration and a regime change. A
+              disciplined test of the kind that catches overfitting before any
+              capital is at risk.
             </p>
             <div class="meta">
               <span class="chip">Python</span>
@@ -427,14 +429,15 @@
         <article class="project">
           <div class="num">02</div>
           <div>
-            <h3>Monte Carlo Option Pricer — Variance Reduction</h3>
+            <h3>Monte Carlo Option Pricer: Variance Reduction</h3>
             <p class="desc">
               Priced European and arithmetic-Asian options by risk-neutral Monte
-              Carlo, validated against closed-form Black–Scholes (within ~1.5
-              standard errors). Implemented antithetic and control-variate
-              estimators (6.8× variance reduction on the European call; ~36× on
-              the Asian via a geometric-average control), and verified the
-              1/√N convergence rate over 40 runs.
+              Carlo and validated the results against closed-form Black–Scholes,
+              agreeing to within roughly 1.5 standard errors. I implemented
+              antithetic and control-variate estimators, achieving a 6.8× variance
+              reduction on the European call and about 36× on the Asian via a
+              geometric-average control, and verified the 1/√N convergence rate
+              over 40 runs.
             </p>
             <div class="meta">
               <span class="chip">Python</span>
@@ -453,16 +456,16 @@
         <article class="project">
           <div class="num">03</div>
           <div>
-            <h3>Volatility Forecasting — GARCH vs. Machine Learning</h3>
+            <h3>Volatility Forecasting: GARCH vs. Machine Learning</h3>
             <p class="desc">
               Implemented GARCH(1,1) from scratch by maximum likelihood and
               benchmarked it against an EWMA baseline and gradient-boosted trees
-              for one-day-ahead volatility, scored out-of-sample with
-              proxy-consistent losses (MSE, QLIKE). On a known GARCH process the
-              MLE recovers the true parameters and the parametric model clearly
-              beats ML — a deliberately contrarian result, plus the lesson that a
-              noisy r² proxy can barely separate models that differ hugely
-              against the truth.
+              for one-day-ahead volatility, scored out of sample with
+              proxy-consistent losses (MSE and QLIKE). On a known GARCH process the
+              estimator recovered the true parameters and the parametric model
+              clearly beat the machine-learning model. A deliberately contrarian
+              result, with the further lesson that a noisy r² proxy can barely
+              separate models that differ substantially against the truth.
             </p>
             <div class="meta">
               <span class="chip">Python</span>
@@ -485,7 +488,7 @@
   <section class="block" id="publications">
     <div class="wrap">
       <div class="block-head">
-        <p class="tag">04 — Publications</p>
+        <p class="tag">04 · Publications</p>
         <h2>Peer-reviewed research</h2>
       </div>
       <article class="project" style="grid-template-columns:1fr;">
@@ -497,9 +500,9 @@
           <h3>Mathematical Modeling of the in Vitro Effects of Pinus Massoniana Bark Extract on Human Hepatoma Cell Line BEL-7402</h3>
           <p class="desc" style="margin-bottom:10px;">
             Y.-Y. Cui, <strong>X.-H. Fang</strong>, X.-Q. Fu (2025). A continuous-time
-            <strong>branching–Hill</strong> stochastic model — combining branching-process
+            <strong>branching–Hill</strong> stochastic model that combines branching-process
             kinetics, a Poisson-process formulation, logistic growth, and sigmoidal (Hill)
-            pharmacodynamics — calibrated to assay data and validated against experimental
+            pharmacodynamics, calibrated to assay data and validated against experimental
             inhibition rates. Grounded in applied probability and nonlinear dynamics.
           </p>
           <div class="meta">
@@ -522,9 +525,9 @@
   <section class="block" id="notes">
     <div class="wrap">
       <div class="block-head">
-        <p class="tag">05 — Notes</p>
+        <p class="tag">05 · Notes</p>
         <h2>Research notes &amp; writing</h2>
-        <p>Short write-ups on the ideas behind the work — and how I think about a problem.</p>
+        <p>Short write-ups on the ideas behind the work, and how I approach a problem.</p>
       </div>
       <div class="notes">
         <!-- ---- 笔记一行：复制整段即可新增一篇 ---- -->
@@ -551,7 +554,7 @@
   <section class="block" id="contact">
     <div class="wrap">
       <div class="block-head">
-        <p class="tag">06 — Contact</p>
+        <p class="tag">06 · Contact</p>
         <h2>Get in touch</h2>
         <p>Happy to talk about quantitative research, mathematical modeling, or any of the work here.</p>
       </div>
@@ -564,9 +567,9 @@
           <div class="k">GitHub</div>
           <div class="v">github.com/terryfxh</div>
         </a>
-        <a class="contact-card" href="https://www.linkedin.com/in/xihanfang" target="_blank">
+        <a class="contact-card" href="https://www.linkedin.com/in/xihan-fang" target="_blank">
           <div class="k">LinkedIn</div>
-          <div class="v">linkedin.com/in/xihanfang</div>
+          <div class="v">linkedin.com/in/xihan-fang</div>
         </a>
       </div>
     </div>
@@ -576,7 +579,6 @@
   <footer>
     <div class="wrap">
       <span>© <span id="year"></span> Terry Fang</span>
-      <span>Built from scratch · HTML · CSS · JS</span>
     </div>
   </footer>
 
