@@ -267,7 +267,7 @@
           </p>
           <p>
             The portfolio below is deliberately evidence-led: a cointegration
-            strategy that fails honestly out of sample, a Monte Carlo pricer
+            strategy that does not survive out of sample, a Monte Carlo pricer
             validated against closed forms, and a volatility study where a
             hand-written GARCH MLE is compared with machine learning under
             proxy-aware losses. Each project reports the setup, the result, and
@@ -403,13 +403,13 @@
             </p>
             <div class="project-evidence">
               <figure class="project-figure">
-                <img src="quant-statarb-pairs/results/03_equity.png" alt="Out-of-sample equity curve and drawdown for the EWA/EWC pairs strategy" loading="lazy" />
+                <img src="assets/statarb-equity.png" alt="Out-of-sample equity curve and drawdown for the EWA/EWC pairs strategy" loading="lazy" />
                 <figcaption>Out-of-sample equity curve and drawdown.</figcaption>
               </figure>
               <div class="metrics" aria-label="Pairs trading key results">
                 <div class="metric">
                   <div class="k">OOS Sharpe</div>
-                  <div class="v">-0.11</div>
+                  <div class="v">−0.11</div>
                   <div class="n">negative across every tested entry threshold</div>
                 </div>
                 <div class="metric">
@@ -453,7 +453,7 @@
             </p>
             <div class="project-evidence">
               <figure class="project-figure">
-                <img src="quant-option-pricer/results/01_convergence.png" alt="Monte Carlo option-pricing RMSE convergence under plain, antithetic, and control-variate estimators" loading="lazy" />
+                <img src="assets/option-convergence.png" alt="Monte Carlo option-pricing RMSE convergence under plain, antithetic, and control-variate estimators" loading="lazy" />
                 <figcaption>RMSE convergence against closed-form Black-Scholes.</figcaption>
               </figure>
               <div class="metrics" aria-label="Option pricer key results">
@@ -464,12 +464,12 @@
                 </div>
                 <div class="metric">
                   <div class="k">Variance reduction</div>
-                  <div class="v">6.8x</div>
+                  <div class="v">6.8×</div>
                   <div class="n">European control variate vs. plain MC</div>
                 </div>
                 <div class="metric">
                   <div class="k">Asian option</div>
-                  <div class="v">36.1x</div>
+                  <div class="v">36.1×</div>
                   <div class="n">standard-error reduction using geometric control</div>
                 </div>
               </div>
@@ -504,7 +504,7 @@
             </p>
             <div class="project-evidence">
               <figure class="project-figure">
-                <img src="quant-vol-forecasting/results/02_scores.png" alt="Out-of-sample QLIKE scores for GARCH, EWMA, and gradient-boosted trees" loading="lazy" />
+                <img src="assets/vol-scores.png" alt="Out-of-sample QLIKE scores for GARCH, EWMA, and gradient-boosted trees" loading="lazy" />
                 <figcaption>Out-of-sample QLIKE, scored against true latent variance.</figcaption>
               </figure>
               <div class="metrics" aria-label="Volatility forecasting key results">
