@@ -1,0 +1,7 @@
+<!-- 网站小图标：深墨绿底 + 一条随机游走折线，呼应首页背景 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#15543a"/>
+  <polyline points="10,40 18,34 24,38 31,24 38,30 45,18 54,22"
+            fill="none" stroke="#faf9f5" stroke-width="5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
