@@ -13,6 +13,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Terry Fang · Quantitative Researcher</title>
   <meta name="description" content="Personal website of Terry Fang, aspiring quantitative researcher and trader with a background in mathematics." />
+  <link rel="canonical" href="https://terryfxh.github.io/" />
+
+  <!-- 网站小图标：浏览器标签页显示 favicon.svg；iPhone 加到主屏幕时用 apple-touch-icon.png -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta name="theme-color" content="#15543a" />
+
+  <!-- 分享预览（Open Graph）：链接发到微信/LinkedIn/Slack 等时显示的标题、简介和图片 -->
+  <!-- 图片必须用完整网址；想换预览图就替换 assets/og-image.png（建议 1200×630） -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Terry Fang" />
+  <meta property="og:title" content="Terry Fang · Quantitative Researcher" />
+  <meta property="og:description" content="Mathematics graduate (KCL M.Sci.) working on probability, stochastic modeling, and financial markets. Projects, research notes, and publications." />
+  <meta property="og:url" content="https://terryfxh.github.io/" />
+  <meta property="og:image" content="https://terryfxh.github.io/assets/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Terry Fang, Aspiring Quantitative Researcher &amp; Trader" />
+  <meta property="og:locale" content="en_GB" />
+  <!-- X / Twitter 用自己的标签，大图卡片 -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Terry Fang · Quantitative Researcher" />
+  <meta name="twitter:description" content="Mathematics graduate working on probability, stochastic modeling, and financial markets." />
+  <meta name="twitter:image" content="https://terryfxh.github.io/assets/og-image.png" />
 
   <!-- 字体：IBM Plex 系列，金融/技术风格 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -76,7 +100,43 @@
     .nav-links { display: flex; gap: 26px; }
     .nav-links a { font-size: 14px; color: var(--ink-soft); transition: color .15s; }
     .nav-links a:hover, .nav-links a.active { color: var(--ink); }
-    @media (max-width: 640px) { .nav-links { display: none; } }
+
+    /* ====== 手机菜单（屏幕窄于 640px 时出现）====== */
+    /* 桌面上隐藏“三条横线”按钮 */
+    .menu-btn {
+      display: none;
+      width: 40px; height: 40px; margin-right: -8px;
+      background: none; border: 0; cursor: pointer; color: var(--ink);
+      align-items: center; justify-content: center;
+    }
+    /* 三条横线：中间一条是 span，上下两条是 ::before / ::after */
+    .menu-btn span, .menu-btn span::before, .menu-btn span::after {
+      display: block; width: 20px; height: 1.5px; background: currentColor;
+      transition: transform .2s, background .2s;
+    }
+    .menu-btn span { position: relative; }
+    .menu-btn span::before, .menu-btn span::after { content: ""; position: absolute; left: 0; }
+    .menu-btn span::before { top: -6px; }
+    .menu-btn span::after { top: 6px; }
+    /* 菜单打开时，三条横线变成一个 × */
+    .menu-btn[aria-expanded="true"] span { background: transparent; }
+    .menu-btn[aria-expanded="true"] span::before { transform: translateY(6px) rotate(45deg); }
+    .menu-btn[aria-expanded="true"] span::after { transform: translateY(-6px) rotate(-45deg); }
+
+    @media (max-width: 640px) {
+      .menu-btn { display: inline-flex; }
+      /* 导航链接平时收起，点按钮后在顶栏下方竖着展开 */
+      .nav-links {
+        display: none;
+        position: absolute; top: 64px; left: 0; right: 0;
+        flex-direction: column; gap: 0;
+        background: var(--paper);
+        border-bottom: 1px solid var(--line);
+        box-shadow: 0 8px 20px rgba(22, 20, 15, 0.06);
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 14px 24px; font-size: 16px; border-top: 1px solid var(--line); }
+    }
 
     /* ====== 英雄区（首屏）====== */
     .hero { position: relative; padding: 96px 0 72px; overflow: hidden; }
@@ -213,7 +273,11 @@
     <div class="wrap nav">
       <!-- 把 YN 换成你名字缩写，Terry Fang 换成全名 -->
       <a href="#top" class="brand">Terry Fang</a>
-      <nav class="nav-links">
+      <!-- 手机菜单按钮：只在窄屏显示，点一下展开/收起下面的导航 -->
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <span></span>
+      </button>
+      <nav class="nav-links" id="site-nav">
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
@@ -657,6 +721,21 @@
       });
     };
     window.addEventListener('scroll', onScroll);
+
+    // 手机菜单：点按钮展开/收起；点了某个链接、按 Esc 或点菜单外面就自动收起
+    const menuBtn = document.querySelector('.menu-btn');
+    const navMenu = document.getElementById('site-nav');
+    const setMenu = (open) => {
+      navMenu.classList.toggle('open', open);
+      menuBtn.setAttribute('aria-expanded', open);
+      menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    menuBtn.addEventListener('click', () => setMenu(!navMenu.classList.contains('open')));
+    navLinks.forEach(a => a.addEventListener('click', () => setMenu(false)));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+    document.addEventListener('click', e => {
+      if (!e.target.closest('header')) setMenu(false);
+    });
 
     // 英雄区背景：模拟一条随机游走（布朗运动）价格曲线，呼应量化主题
     const canvas = document.getElementById('walk');
